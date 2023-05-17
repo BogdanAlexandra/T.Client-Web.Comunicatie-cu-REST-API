@@ -2,7 +2,8 @@
 ### - Protocoale de Comunicație -
 
    > STUDENT: Bogdan Alexandra-Lăcrămioara
-   >  GRUPA: 325CD
+  
+   > GRUPA: 325CD
 
 **Comenzi**
 
