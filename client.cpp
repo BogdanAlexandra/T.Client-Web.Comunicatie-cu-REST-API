@@ -74,11 +74,11 @@ bool digits(std::string str){
 
 nlohmann::json receive_json(std::string str) {
 
-            unsigned first = str.find("[{");
-            unsigned last = str.find("}]");
-            string to_print = str.substr(first, last - first + 2);
+            size_t first = str.find_first_of("[{");
+            size_t last = str.find_last_of("}]");
+            std::string to_print = str.substr(first, last - first + 2);
             json to_print1 = json::parse(to_print);
-
+    
     return to_print1;
 
 }
@@ -285,6 +285,11 @@ int main() {
   //get books
    else if (!strncmp(command, "get_books\n", 9)) {
 
+    if (autorization.compare("NU") == 0) {
+        cout << "Error! You are not logged in!\n";
+        continue;
+      }
+
     if(token_JWT == "NU") {
       std::cout<<"Error! You don't have access to the library.\n";
       continue;
@@ -334,11 +339,19 @@ int main() {
    //add book
    else if(!strncmp(command, "add_book\n", 9)) {
 
+    if (autorization.compare("NU") == 0) {
+        cout << "Error! You are not logged in!\n";
+        continue;
+      }
+
     if(token_JWT.compare("NU") == 0) {
       std::cout<<"Error! You don't have access to the library.\n";
       continue;
     }
     else {
+
+       string token1[1];
+       token1[0] = token_JWT;
 
       string title;
       std::cout<<"title=";
@@ -366,11 +379,6 @@ int main() {
         continue;
 
       }
-      if(digit(title) == true) {
-        std::cout<<"Error! Title contains digit!\n";
-        continue;
-        }
-
         if(author.empty()) {
         std::cout<<"Error! Please introduce a non-empty data.\n";
         continue;
@@ -421,8 +429,6 @@ int main() {
         {"page_count", page_count},
      };
 
-        string token1[1];
-        token1[0] = token_JWT;
       
         message = compute_post_request((char *)" 34.254.242.81", (char *) "/api/v1/tema/library/books",
                                                     (char *)"application/json", book , 1, token1, 1);
@@ -453,6 +459,7 @@ int main() {
    //get book
    else if (!strncmp(command, "get_book\n", 8)){
 
+
       std::string id;
       std::cout<<"id=";
       std::cin>>id;
@@ -471,6 +478,12 @@ int main() {
         continue;
 
       }
+
+    if (autorization.compare("NU") == 0) {
+        cout << "Error! You are not logged in!\n";
+        continue;
+      }
+
     if(token_JWT == "NU") {
       std::cout<<"Error! You don't have access to the library.\n";
       continue;
@@ -515,7 +528,8 @@ int main() {
           else {
               std::string string_from_response(response);
               json raspuns = receive_json_one_book(string_from_response);
-              std::cout<<raspuns<<endl;
+              std::cout<<"{\n"<< "title: " << raspuns["title"] << "\n" << "author: " << raspuns["author"]<< "\n" << "genre: " << raspuns["genre"] << "\n" 
+                  << "page_count: " << raspuns["page_count"] << "\n" << "publisher: " << raspuns["publisher"] << "\n" << "}\n"; 
             }
       }
         close_connection(sockfd);
@@ -543,7 +557,11 @@ int main() {
         continue;
 
       }
-
+      if (autorization.compare("NU") == 0) {
+        cout << "Error! You are not logged in!\n";
+        continue;
+      }
+      
       if(token_JWT == "NU") {
       std::cout<<"Error! You don't have access to the library.\n";
       continue;
